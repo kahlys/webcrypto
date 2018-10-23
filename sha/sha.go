@@ -6,6 +6,11 @@ import (
 	"github.com/gopherjs/gopherjs/js"
 )
 
+// Sum1 returns the SHA-1 of the data
+func Sum1(data []byte) (res []byte, err error) {
+	return sum("SHA-1", data)
+}
+
 // Sum256 returns the SHA-256 of the data
 func Sum256(data []byte) (res []byte, err error) {
 	return sum("SHA-256", data)
