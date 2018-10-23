@@ -25,4 +25,4 @@ $ gopherjs build test.go
 
 ## Packages
 
-- `sha`: `sha-256`
+- [SHA](https://godoc.org/github.com/kahlys/webcrypto/sha) : [sha-1](https://godoc.org/github.com/kahlys/webcrypto/sha#Sum1) | [sha-256](https://godoc.org/github.com/kahlys/webcrypto/sha#Sum256) | [sha-384](https://godoc.org/github.com/kahlys/webcrypto/sha#Sum384) | [sha-512](https://godoc.org/github.com/kahlys/webcrypto/sha#Sum512)
