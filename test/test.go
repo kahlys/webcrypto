@@ -44,11 +44,24 @@ func testSha384() error {
 	return nil
 }
 
+func testSha512() error {
+	expected, _ := hex.DecodeString("309ecc489c12d6eb4cc40f50c902f2b4d0ed77ee511a7c7a9bcd3ca86d4cd86f989dd35bc5ff499670da34255b45b0cfd830e81f605dcf7dc5542e93ae9cd76f")
+	actual, err := sha.Sum512([]byte("hello world"))
+	if err != nil {
+		return fmt.Errorf("sum512 error: %s", err)
+	}
+	if bytes.Compare(expected, actual) != 0 {
+		return fmt.Errorf("not expected value")
+	}
+	return nil
+}
+
 func main() {
 	register(
 		testfunc{"SHA-1", testSha1},
 		testfunc{"SHA-256", testSha256},
 		testfunc{"SHA-384", testSha384},
+		testfunc{"SHA-512", testSha512},
 	)
 	run()
 }

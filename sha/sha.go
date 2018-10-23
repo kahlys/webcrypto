@@ -21,6 +21,11 @@ func Sum384(data []byte) (res []byte, err error) {
 	return sum("SHA-384", data)
 }
 
+// Sum512 returns the SHA-512 of the data
+func Sum512(data []byte) (res []byte, err error) {
+	return sum("SHA-512", data)
+}
+
 func sum(hash string, data []byte) (res []byte, err error) {
 	crypt := js.Global.Get("crypto")
 	if crypt == js.Undefined {
