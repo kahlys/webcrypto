@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gopherjs/gopherjs/js"
+	"github.com/kahlys/webcrypto"
 )
 
 // Sum1 returns the SHA-1 of the data
@@ -27,26 +28,12 @@ func Sum512(data []byte) (res []byte, err error) {
 }
 
 func sum(hash string, data []byte) (res []byte, err error) {
-	crypt := js.Global.Get("crypto")
-	if crypt == js.Undefined {
-		crypt = js.Global.Get("msCrypto")
+	algorithm := js.M{
+		"name": hash,
 	}
-	crypto := crypt.Get("subtle")
-	if crypto != js.Undefined {
-		if crypto.Get("digest") != js.Undefined {
-			resChan := make(chan []byte, 1)
-			algorithm := js.M{
-				"name": hash,
-			}
-			promise := crypto.Call("digest", algorithm, data)
-			promise.Call("then", func(result *js.Object) {
-				go func() {
-					resChan <- js.Global.Get("Uint8Array").New(result).Interface().([]byte)
-				}()
-			})
-			res = <-resChan
-			return res, nil
-		}
+	resjs, err := webcrypto.Call("digest", algorithm, data)
+	if err != nil {
+		return nil, fmt.Errorf("unable to hash: %s", err)
 	}
-	return nil, fmt.Errorf("webcrypto api error: unable to get js.crypto.subtle.digest or js.msCrypto.subtle.digest")
+	return js.Global.Get("Uint8Array").New(resjs).Interface().([]byte), nil
 }
