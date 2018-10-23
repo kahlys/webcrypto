@@ -1,8 +1,9 @@
 # webcrypto
 
-**WORK IN PROGRESS**
+![stability-wip](https://img.shields.io/badge/stability-work_in_progress-lightgrey.svg)
+[![GoDoc](https://godoc.org/github.com/kahlys/webcrypto?status.svg)](https://godoc.org/github.com/kahlys/webcrypto)
 
-Golang wrapper around the WebCryptoAPI
+Golang wrapper around the WebCryptoAPI.
 
 ## Installation
 
