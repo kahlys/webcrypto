@@ -46,3 +46,45 @@ func DecryptCBC(key, iv, text []byte) ([]byte, error) {
 	}
 	return js.Global.Get("Uint8Array").New(resjs).Interface().([]byte), nil
 }
+
+// EncryptGCM performs an aes-gcm encryption. The 16 last bytes of the output is the tag.
+func EncryptGCM(key, iv, text, extraData []byte) ([]byte, error) {
+	k, err := importKey("AES-GCM", key)
+	if err != nil {
+		return nil, err
+	}
+	algorithm := js.M{
+		"name":      "AES-GCM",
+		"iv":        iv,
+		"tagLength": 128,
+	}
+	if extraData != nil {
+		algorithm["additionalData"] = extraData
+	}
+	resjs, err := webcrypto.Call("encrypt", algorithm, k, text)
+	if err != nil {
+		return nil, err
+	}
+	return js.Global.Get("Uint8Array").New(resjs).Interface().([]byte), nil
+}
+
+// DecryptGCM performs an aes-gcm decryption.
+func DecryptGCM(key, iv, text, extraData []byte) ([]byte, error) {
+	k, err := importKey("AES-GCM", key)
+	if err != nil {
+		return nil, err
+	}
+	algorithm := js.M{
+		"name":      "AES-GCM",
+		"iv":        iv,
+		"tagLength": 128,
+	}
+	if extraData != nil {
+		algorithm["additionalData"] = extraData
+	}
+	resjs, err := webcrypto.Call("decrypt", algorithm, k, text)
+	if err != nil {
+		return nil, err
+	}
+	return js.Global.Get("Uint8Array").New(resjs).Interface().([]byte), nil
+}

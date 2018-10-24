@@ -79,6 +79,28 @@ func testAesCbc() error {
 	return nil
 }
 
+func testAesGcm() error {
+	// expected, _ := hex.DecodeString("TBD")
+	data := []byte("yellow submarine")
+	iv, _ := hex.DecodeString("52cbbf25804213a7cdecfef9d22dac30")
+	key, _ := hex.DecodeString("f4a08eef65d0be7082c2f7dcef2b9439")
+	actual, err := aes.EncryptGCM(key, iv, data, nil)
+	if err != nil {
+		return fmt.Errorf("encryption error: %s", err)
+	}
+	// if bytes.Compare(expected, actual) != 0 {
+	// 	return fmt.Errorf("not expected ciphertext value")
+	// }
+	actual, err = aes.DecryptGCM(key, iv, actual, nil)
+	if err != nil {
+		return fmt.Errorf("encryption error: %s", err)
+	}
+	if bytes.Compare(data, actual) != 0 {
+		return fmt.Errorf("not expected plaintext value")
+	}
+	return nil
+}
+
 func main() {
 	register(
 		testfunc{"SHA-1", testSha1},
@@ -86,6 +108,7 @@ func main() {
 		testfunc{"SHA-384", testSha384},
 		testfunc{"SHA-512", testSha512},
 		testfunc{"AES-CBC", testAesCbc},
+		testfunc{"AES-GCM", testAesGcm},
 	)
 	run()
 }
