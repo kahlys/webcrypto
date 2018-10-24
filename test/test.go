@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"fmt"
 
+	"github.com/kahlys/webcrypto/aes"
 	"github.com/kahlys/webcrypto/sha"
 )
 
@@ -56,12 +57,35 @@ func testSha512() error {
 	return nil
 }
 
+func testAesCbc() error {
+	expected, _ := hex.DecodeString("3647f8768f5198c9c60d1c2ce248b463290fe64907d38b339f649b9beb12e133")
+	data := []byte("yellow submarine")
+	iv, _ := hex.DecodeString("52cbbf25804213a7cdecfef9d22dac30")
+	key, _ := hex.DecodeString("f4a08eef65d0be7082c2f7dcef2b9439")
+	actual, err := aes.EncryptCBC(key, iv, data)
+	if err != nil {
+		return fmt.Errorf("encryption error: %s", err)
+	}
+	if bytes.Compare(expected, actual) != 0 {
+		return fmt.Errorf("not expected ciphertext value")
+	}
+	actual, err = aes.DecryptCBC(key, iv, actual)
+	if err != nil {
+		return fmt.Errorf("encryption error: %s", err)
+	}
+	if bytes.Compare(data, actual) != 0 {
+		return fmt.Errorf("not expected plaintext value")
+	}
+	return nil
+}
+
 func main() {
 	register(
 		testfunc{"SHA-1", testSha1},
 		testfunc{"SHA-256", testSha256},
 		testfunc{"SHA-384", testSha384},
 		testfunc{"SHA-512", testSha512},
+		testfunc{"AES-CBC", testAesCbc},
 	)
 	run()
 }
