@@ -2,10 +2,14 @@ package main
 
 import (
 	"bytes"
+	"crypto/ecdsa"
+	"crypto/elliptic"
+	"crypto/rand"
 	"encoding/hex"
 	"fmt"
 
 	"github.com/kahlys/webcrypto/aes"
+	wecdsa "github.com/kahlys/webcrypto/ecdsa"
 	"github.com/kahlys/webcrypto/sha"
 )
 
@@ -101,6 +105,20 @@ func testAesGcm() error {
 	return nil
 }
 
+func testEcdsa() error {
+	text := []byte("yellow submarine")
+	priv, _ := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	sig, err := wecdsa.Sign(priv, text)
+	if err != nil {
+		return fmt.Errorf("unable to sign: %v", err)
+	}
+	err = wecdsa.Verify(&priv.PublicKey, sig, text)
+	if err != nil {
+		return fmt.Errorf("unable to verify: %v", err)
+	}
+	return nil
+}
+
 func main() {
 	register(
 		testfunc{"SHA-1", testSha1},
@@ -109,6 +127,7 @@ func main() {
 		testfunc{"SHA-512", testSha512},
 		testfunc{"AES-CBC", testAesCbc},
 		testfunc{"AES-GCM", testAesGcm},
+		testfunc{"ECDSA", testEcdsa},
 	)
 	run()
 }
