@@ -28,3 +28,4 @@ $ gopherjs build test.go
 
 - [SHA](https://godoc.org/github.com/kahlys/webcrypto/sha) : [sha-1](https://godoc.org/github.com/kahlys/webcrypto/sha#Sum1) | [sha-256](https://godoc.org/github.com/kahlys/webcrypto/sha#Sum256) | [sha-384](https://godoc.org/github.com/kahlys/webcrypto/sha#Sum384) | [sha-512](https://godoc.org/github.com/kahlys/webcrypto/sha#Sum512)
 - [AES](https://godoc.org/github.com/kahlys/webcrypto/aes) : [cbc](https://godoc.org/github.com/kahlys/webcrypto/aes#EncryptCBC) | [gcm](https://godoc.org/github.com/kahlys/webcrypto/aes#EncryptGCM)
+- [ECDSA](https://godoc.org/github.com/kahlys/webcrypto/ecdsa)
