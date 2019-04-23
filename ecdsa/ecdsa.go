@@ -46,7 +46,7 @@ type ecdsaSignature struct {
 	R, S *big.Int
 }
 
-// Sign calculates the signature of msg using RSASSA-PSS. The opts argument may be nil, in which case sensible
+// Sign calculates the signature of msg using ECDSA. The opts argument may be nil, in which case sensible
 // defaults are used. Warning, msg will be hashed with SHA-256. It returns asn1.encode(r.Bytes(), s.Bytes()).
 func Sign(priv *ecdsa.PrivateKey, msg []byte) ([]byte, error) {
 	privKey, err := importPrivateKey(priv)
