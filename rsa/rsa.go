@@ -74,3 +74,39 @@ func VerifyPKCS1(pub *rsa.PublicKey, sig, msg []byte) error {
 	}
 	return nil
 }
+
+// SignPSS calculates the signature of msg using RSASSA-PKCS1-v1_5. The opts argument may be nil, in which case sensible
+// defaults are used. Warning, msg will be hashed with SHA-256. Salt length is 128.
+func SignPSS(priv *rsa.PrivateKey, msg []byte) ([]byte, error) {
+	privKey, err := importPrivateKey(priv, "PS256", "RSA-PSS")
+	if err != nil {
+		return nil, err
+	}
+	algorithm := js.M{
+		"name":       "RSA-PSS",
+		"saltLength": 128,
+	}
+	resj, err := webcrypto.Call("sign", algorithm, privKey, msg)
+	if err != nil {
+		return nil, err
+	}
+	return js.Global.Get("Uint8Array").New(resj).Interface().([]byte), nil
+}
+
+// VerifyPSS verifies the signature sig of msg using the public key pub. A valid signature is
+// indicated by returning a nil error.
+func VerifyPSS(pub *rsa.PublicKey, sig, msg []byte) error {
+	pubKey, _ := importPublicKey(pub, "RS256", "RSASSA-PKCS1-v1_5")
+	algorithm := js.M{
+		"name":       "RSA-PSS",
+		"saltLength": 128,
+	}
+	resj, err := webcrypto.Call("verify", algorithm, pubKey, sig, msg)
+	if err != nil {
+		return err
+	}
+	if !resj.Bool() {
+		return fmt.Errorf("verification error")
+	}
+	return nil
+}
